@@ -42,7 +42,7 @@ const movies = [
         genre: "Aventura",
         release: true,
         rated: "PG-13",
-        synopsis: `As reservas naturais da Terra estão chegando ao fim e um grupo de astronautas recebe a missão de verificar possíveis planetas para receberem a população mundial, possibilitando a continuação da espécie. Cooper é chamado para liderar o grupo e aceita a missão sabendo que pode nunca mais ver os filhos. Ao lado de Brand, Jenkins e Doyle, ele seguirá em busca de um novo lar.`,
+        synopsis: `As reservas naturais da Terra estão chegando ao fim e um grupo de astronautas recebe a missão de verificar possíveis planetas para receberem a população mundial, possibilitando a continuação da espécie. Cooper é chamado para liderar o grupo e aceita a missão sabendo que pode nunca mais ver os filhos.`,
     },
     {
         id: 6,
@@ -55,9 +55,9 @@ const movies = [
     },
 ];
 
+const watchListMovies = [];
+
 function creatCards(movie) {
-   
-    
 
     const liCard = document.createElement("li");
     const h3Title = document.createElement("h3");
@@ -74,27 +74,64 @@ function creatCards(movie) {
     const btnRental = document.createElement("button");
 
     liCard.classList.add("movie-card");
+
     h3Title.classList.add("movie-name");
+    h3Title.innerText = movie.title;
+
     divHeader.classList.add("movie-header");
+
     h4Genge.classList.add("movie-genre");
+    h4Genge.innerText = movie.genre;
+
     spanRated.classList.add("rated");
+    if (movie.rated === "G") {
+        spanRated.classList.add("rated-g");
+    } else if (movie.rated === "PG-13") {
+        spanRated.classList.add("rated-pg-13");
+    } else if (movie.rated === 'R') {
+        spanRated.classList.add("rated-r");
+    }
+    spanRated.innerText = movie.rated;
+
     ulRating.classList.add("movie-rating");
     liRating.classList.add("star");
-    imgMovie.classList.add("movie-img");
-    divMovieContent.classList.add("movie-content");
-    paragraph.classList.add("movie-synopsis");
-    divButtons.classList.add("movie-buttons");
-    btnWatchlist.classList.add("movie-action-button");
-    btnRental.classList.add("movie-action-button");
 
-    h3Title.innerText = movie.title;
-    h4Genge.innerText = movie.genre;
-    spanRated.innerText = movie.rated;
+    imgMovie.classList.add("movie-img");
     imgMovie.src = movie.poster;
     imgMovie.alt = "Poster do filme " + movie.title;
+
+    divMovieContent.classList.add("movie-content");
+
+    paragraph.classList.add("movie-synopsis");
     paragraph.innerText = movie.synopsis;
-    btnWatchlist.innerText="Adicionar a Watchlist";
-    btnRental.innerText="Alugar";
+
+    divButtons.classList.add("movie-buttons");
+
+    btnWatchlist.classList.add("movie-action-button");
+    btnWatchlist.innerText = "Adicionar a Watchlist";
+    btnWatchlist.id = movie.id;
+
+    btnWatchlist.addEventListener("click", function (event) {
+        
+        let movieExist = false;
+        for (let i = 0; i < watchListMovies.length; i++) {           
+            if (event.target.id == watchListMovies[i].id) {
+                movieExist = true;
+            } 
+        }        
+
+        for (let i = 0; i < movies.length; i++) {
+            if (movies[i].id == event.target.id && movieExist == false) {
+                watchListMovies.push(movies[i]);
+                renderWatchList(watchListMovies);
+            }
+        }
+
+    });
+
+    btnRental.classList.add("movie-action-button");
+    btnRental.innerText = "Alugar";
+
 
     ulRating.append(liRating);
     divHeader.append(h4Genge, spanRated, ulRating);
@@ -108,39 +145,65 @@ function creatCards(movie) {
 
 function renderMovies(list) {
     const ulListMovies = document.querySelector(".movie-list");
-    ulListMovies.innerHTML='';
+    ulListMovies.innerHTML = '';
     for (let i = 0; i < list.length; i++) {
-        
+
         ulListMovies.append(creatCards(list[i]));
     }
 }
 
+
+function creatWatchListCard(movie) {
+
+
+    const liCard = document.createElement("li");
+    const h3Title = document.createElement("h3");
+    const h4Genge = document.createElement("h4");
+    const divContent=document.createElement("div");
+    const divHeader=document.createElement("div");
+    const spanRated = document.createElement("span");
+    const imgMovie = document.createElement("img");
+
+    liCard.classList.add("movie-card-watchList");
+    divContent.classList.add("watchList-movie-content");
+    divHeader.classList.add("watchList-div-header");
+
+    h3Title.classList.add("movie-name");
+    h3Title.innerText = movie.title;
+
+    h4Genge.classList.add("movie-genre");
+    h4Genge.innerText = movie.genre;
+
+    spanRated.classList.add("rated");
+    if (movie.rated === "G") {
+        spanRated.classList.add("rated-g");
+    } else if (movie.rated === "PG-13") {
+        spanRated.classList.add("rated-pg-13");
+    } else if (movie.rated === 'R') {
+        spanRated.classList.add("rated-r");
+    }
+    spanRated.innerText = movie.rated;
+
+    imgMovie.classList.add("watch-list-movie-img");
+    imgMovie.src = movie.poster;
+    imgMovie.alt = "Poster do filme " + movie.title;
+
+    divHeader.append(spanRated,h4Genge);
+    divContent.append(imgMovie,divHeader);
+    liCard.append(h3Title, divContent );
+    return liCard;
+
+}
+
+function renderWatchList(listMovies) {
+    const ulWatchList = document.querySelector(".watchlist-list");
+    ulWatchList.innerHTML = '';
+    for (let movie of listMovies) {
+        const card = creatWatchListCard(movie);
+        ulWatchList.appendChild(card);
+    }
+
+
+}
+
 renderMovies(movies);
-
-
-
-
-
-//   <li class="movie-card">
-//                 <h3 class="movie-name">Matrix</h3>
-//                 <div class="movie-header">
-//                     <h4 class="movie-genre">Ficção Cientifica</h4>
-//                     <span class="rated">PG-13</span>
-//                     <ul class="movie-rating">
-//                         <li class="star"></li>
-//                     </ul>
-//                 </div>
-//                 <div class="movie-content">
-//                     <img src="./imgs/matrix-poster.jpg" alt="Poster Matrix" class="movie-img">
-
-//                     <p class="movie-synopsis">
-//                         O jovem programador Thomas Anderson é atormentado por
-//                         estranhos pesadelos em que está sempre conectado por cabos a
-//                         um imenso sistema de computadores do futuro.
-//                     </p>
-//                 </div>
-//                 <div class="movie-buttons">
-//                     <button class="movie-action-button">Adicionar a Watchlist</button>
-//                     <button class="movie-action-button">Alugar</button>
-//                 </div>
-//             </li>
