@@ -163,6 +163,8 @@ function creatWatchListCard(movie) {
     const divHeader=document.createElement("div");
     const spanRated = document.createElement("span");
     const imgMovie = document.createElement("img");
+    const btnDel=document.createElement("button");
+    const trashIcon=document.createElement("i");
 
     liCard.classList.add("movie-card-watchList");
     divContent.classList.add("watchList-movie-content");
@@ -187,8 +189,15 @@ function creatWatchListCard(movie) {
     imgMovie.classList.add("watch-list-movie-img");
     imgMovie.src = movie.poster;
     imgMovie.alt = "Poster do filme " + movie.title;
+    
+    trashIcon.classList.add("fa-regular", "fa-trash-can" ,"white-trash","fa-2x");
+    trashIcon.id=movie.id;
+    trashIcon.addEventListener("click",function(event){
+        console.log(event.target.id);
+    })
 
-    divHeader.append(spanRated,h4Genge);
+
+    divHeader.append(spanRated,h4Genge,trashIcon);
     divContent.append(imgMovie,divHeader);
     liCard.append(h3Title, divContent );
     return liCard;
