@@ -64,14 +64,14 @@ function creatCards(movie) {
     const divHeader = document.createElement("div");
     const h4Genge = document.createElement("h4");
     const spanRated = document.createElement("span");
-    const ulRating = document.createElement("ul");
-    const liRating = document.createElement("li");
+    const divRating = document.createElement("div");
     const divMovieContent = document.createElement("div");
     const imgMovie = document.createElement("img");
     const paragraph = document.createElement("p");
     const divButtons = document.createElement("div");
     const btnWatchlist = document.createElement("button");
     const btnRental = document.createElement("button");
+
 
     liCard.classList.add("movie-card");
 
@@ -93,8 +93,26 @@ function creatCards(movie) {
     }
     spanRated.innerText = movie.rated;
 
-    ulRating.classList.add("movie-rating");
-    liRating.classList.add("star");
+    divRating.classList.add("movie-rating");
+    for (let i = 1; i <= 5; i++) {
+        const iRating = document.createElement("i");
+        iRating.classList.add("fa-solid", "fa-star");
+        iRating.id = "star-" + i;
+        divRating.appendChild(iRating);
+    }
+
+    divRating.addEventListener("click", function(event) {
+        const allStars = event.currentTarget.children;        
+        const clickedStar = event.target.id[5];        
+        for (let i = 0; i < 5; i++) {
+            if (i < clickedStar) {
+                allStars[i].classList.add("star-checked");
+                
+            } else {
+                allStars[i].classList.remove("star-checked");
+            }
+        }
+    });
 
     imgMovie.classList.add("movie-img");
     imgMovie.src = movie.poster;
@@ -112,13 +130,12 @@ function creatCards(movie) {
     btnWatchlist.id = movie.id;
 
     btnWatchlist.addEventListener("click", function (event) {
-        
         let movieExist = false;
-        for (let i = 0; i < watchListMovies.length; i++) {           
+        for (let i = 0; i < watchListMovies.length; i++) {
             if (event.target.id == watchListMovies[i].id) {
                 movieExist = true;
-            } 
-        }        
+            }
+        }
 
         for (let i = 0; i < movies.length; i++) {
             if (movies[i].id == event.target.id && movieExist == false) {
@@ -126,15 +143,12 @@ function creatCards(movie) {
                 renderWatchList(watchListMovies);
             }
         }
-
     });
 
     btnRental.classList.add("movie-action-button");
     btnRental.innerText = "Alugar";
 
-
-    ulRating.append(liRating);
-    divHeader.append(h4Genge, spanRated, ulRating);
+    divHeader.append(h4Genge, spanRated, divRating);
     divMovieContent.append(imgMovie, paragraph);
     divButtons.append(btnWatchlist, btnRental);
     liCard.append(h3Title, divHeader, divMovieContent, divButtons);
@@ -159,12 +173,12 @@ function creatWatchListCard(movie) {
     const liCard = document.createElement("li");
     const h3Title = document.createElement("h3");
     const h4Genge = document.createElement("h4");
-    const divContent=document.createElement("div");
-    const divHeader=document.createElement("div");
+    const divContent = document.createElement("div");
+    const divHeader = document.createElement("div");
     const spanRated = document.createElement("span");
     const imgMovie = document.createElement("img");
-    const btnDel=document.createElement("button");
-    const trashIcon=document.createElement("i");
+    const btnDel = document.createElement("button");
+    const trashIcon = document.createElement("i");
 
     liCard.classList.add("movie-card-watchList");
     divContent.classList.add("watchList-movie-content");
@@ -189,17 +203,19 @@ function creatWatchListCard(movie) {
     imgMovie.classList.add("watch-list-movie-img");
     imgMovie.src = movie.poster;
     imgMovie.alt = "Poster do filme " + movie.title;
-    
-    trashIcon.classList.add("fa-regular", "fa-trash-can" ,"white-trash","fa-2x");
-    trashIcon.id=movie.id;
-    trashIcon.addEventListener("click",function(event){
+
+    trashIcon.classList.add("fa-regular", "fa-trash-can", "white-trash", "fa-2x");
+    trashIcon.id = movie.id;
+
+    trashIcon.addEventListener("click", function (event) {
         console.log(event.target.id);
+        removeWachList(event.target.id);
     })
 
 
-    divHeader.append(spanRated,h4Genge,trashIcon);
-    divContent.append(imgMovie,divHeader);
-    liCard.append(h3Title, divContent );
+    divHeader.append(spanRated, h4Genge, trashIcon);
+    divContent.append(imgMovie, divHeader);
+    liCard.append(h3Title, divContent);
     return liCard;
 
 }
@@ -212,7 +228,16 @@ function renderWatchList(listMovies) {
         ulWatchList.appendChild(card);
     }
 
+}
 
+function removeWachList(id) {
+    for (let i = 0; i < watchListMovies.length; i++) {
+
+        if (id == watchListMovies[i].id) {
+            watchListMovies.splice(i, 1);
+        }
+    }
+    renderWatchList(watchListMovies);
 }
 
 renderMovies(movies);

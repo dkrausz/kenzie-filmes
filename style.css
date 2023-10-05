@@ -81,6 +81,14 @@ padding-block: 0.6rem;
     background-color: rgba(189, 7, 7, 0.722);
 }
 
+.movie-rating{
+    display: flex;
+    gap:0.3rem;
+}
+
+.star-checked{
+    color:#efa401
+}
 
 .movie-synopsis{
 width: 100%;
@@ -152,9 +160,10 @@ width: 100%;
 .watchList-div-header{
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     width: 50%;
-    gap: 1.2rem;
+    /* gap: 1.5rem; */
    
 }
 
